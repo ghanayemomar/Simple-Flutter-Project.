@@ -68,6 +68,7 @@ class _MyHomePageState extends State<MyHomePage> {
       date: DateTime.now(),
     ),
   ];
+
   bool _showChart = true;
   List<Transaction> get _recentTransaction {
     return _userTransactions.where((tx) {
@@ -116,61 +117,75 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // final appBarHeight = appBar.preferredSize.height;
+    final isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
     final appBar = AppBar(
-      title: Text('Personal Expenses'),
+      title: Text(
+        'Personal Expenses',
+      ),
       actions: <Widget>[
-        Row(
-          children: <Widget>[
-            Text("Show Chart"),
-            Switch(
-              activeColor: Colors.green,
-              activeTrackColor: Colors.blueGrey,
-              inactiveThumbColor: Colors.white,
-              inactiveTrackColor: Colors.blueGrey,
-              value: _showChart,
-              onChanged: (val) {
-                setState(() {
-                  _showChart = val;
-                });
-              },
-            ),
-          ],
-        ),
         IconButton(
-            onPressed: () => _startAddNewTransaction(context),
-            icon: Icon(Icons.add, color: Colors.white))
+          icon: Icon(Icons.add),
+          onPressed: () => _startAddNewTransaction(context),
+        ),
       ],
+    );
+    final txListWidget = Container(
+      height: (MediaQuery.of(context).size.height -
+              appBar.preferredSize.height -
+              MediaQuery.of(context).padding.top) *
+          0.7,
+      child: TransactionList(_userTransactions, _deleteTransaction),
     );
     return Scaffold(
       appBar: appBar,
       body: SingleChildScrollView(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+          // mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            _showChart
-                ? Container(
-                    height: (MediaQuery.of(context).size.height -
-                            appBar.preferredSize.height -
-                            MediaQuery.of(context).padding.top) *
-                        0.3,
-                    child: Chart(_recentTransaction))
-                : Container(
-                    height: (MediaQuery.of(context).size.height -
-                            appBar.preferredSize.height -
-                            MediaQuery.of(context).padding.top) *
-                        0.7,
-                    child:
-                        TransactionList(_userTransactions, _deleteTransaction))
+            if (isLandscape)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text('Show Chart'),
+                  Switch(
+                    value: _showChart,
+                    onChanged: (val) {
+                      setState(() {
+                        _showChart = val;
+                      });
+                    },
+                  ),
+                ],
+              ),
+            if (!isLandscape)
+              Container(
+                height: (MediaQuery.of(context).size.height -
+                        appBar.preferredSize.height -
+                        MediaQuery.of(context).padding.top) *
+                    0.3,
+                child: Chart(_recentTransaction),
+              ),
+            if (!isLandscape) txListWidget,
+            if (isLandscape)
+              _showChart
+                  ? Container(
+                      height: (MediaQuery.of(context).size.height -
+                              appBar.preferredSize.height -
+                              MediaQuery.of(context).padding.top) *
+                          0.7,
+                      child: Chart(_recentTransaction),
+                    )
+                  : txListWidget
           ],
         ),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () => _startAddNewTransaction(context),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
