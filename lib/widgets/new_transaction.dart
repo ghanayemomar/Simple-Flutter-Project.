@@ -49,58 +49,65 @@ class _NewTransactionState extends State<NewTransaction> {
   }
 
   Widget build(BuildContext context) {
-    return Card(
-        elevation: 5,
-        child: Container(
-            padding: EdgeInsets.all(10),
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: <Widget>[
-                  TextField(
-                    decoration: InputDecoration(labelText: 'Title'),
-                    controller: _titleController,
-                    onSubmitted: (_) => _submitData(),
-                  ),
-                  TextField(
-                    decoration: InputDecoration(labelText: "Amount"),
-                    controller: _amountController,
-                    onSubmitted: (_) => _submitData(),
-                    keyboardType: TextInputType.number,
-                  ),
-                  Container(
-                    // height: 17,
-                    padding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
-                    child: Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Text(
-                            _selectedDate == null
-                                ? "No Date Chosen!"
-                                : 'Pidcked Date: ${DateFormat.yMd().format(_selectedDate)}',
+    return SingleChildScrollView(
+      child: Card(
+          elevation: 5,
+          child: Container(
+              padding: EdgeInsets.only(
+                  top: 10,
+                  left: 10,
+                  right: 10,
+                  bottom: MediaQuery.of(context).viewInsets.bottom + 10),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: <Widget>[
+                    TextField(
+                      decoration: InputDecoration(labelText: 'Title'),
+                      controller: _titleController,
+                      onSubmitted: (_) => _submitData(),
+                    ),
+                    TextField(
+                      decoration: InputDecoration(labelText: "Amount"),
+                      controller: _amountController,
+                      onSubmitted: (_) => _submitData(),
+                      keyboardType: TextInputType.number,
+                    ),
+                    Container(
+                      // height: 17,
+                      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: Text(
+                              _selectedDate == null
+                                  ? "No Date Chosen!"
+                                  : 'Pidcked Date: ${DateFormat.yMd().format(_selectedDate)}',
+                            ),
                           ),
-                        ),
-                        TextButton(
-                          style: ButtonStyle(
-                              foregroundColor: MaterialStateProperty.all<Color>(
-                                  Theme.of(context).primaryColorDark)),
-                          child: Text("Choose Date",
-                              style: TextStyle(fontWeight: FontWeight.bold)),
-                          onPressed: _presentDatePicker,
-                        )
-                      ],
+                          TextButton(
+                            style: ButtonStyle(
+                                foregroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        Theme.of(context).primaryColorDark)),
+                            child: Text("Choose Date",
+                                style: TextStyle(fontWeight: FontWeight.bold)),
+                            onPressed: _presentDatePicker,
+                          )
+                        ],
+                      ),
                     ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      _submitData();
-                    },
-                    child: Text("Add Transaction",
-                        style: TextStyle(color: Colors.white)),
-                    style: ButtonStyle(
-                      foregroundColor: MaterialStateProperty.all<Color>(
-                          Theme.of(context).primaryColor),
-                    ),
-                  )
-                ])));
+                    ElevatedButton(
+                      onPressed: () {
+                        _submitData();
+                      },
+                      child: Text("Add Transaction",
+                          style: TextStyle(color: Colors.white)),
+                      style: ButtonStyle(
+                        foregroundColor: MaterialStateProperty.all<Color>(
+                            Theme.of(context).primaryColor),
+                      ),
+                    )
+                  ]))),
+    );
   }
 }
